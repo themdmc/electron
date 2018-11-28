@@ -8,7 +8,7 @@ When a majority of affected functions are migrated, this flag will be enabled by
 
 ### Candidate Functions
 
-- [app.importCertificate(options, callback)](https://github.com/electron/electron/blob/master/docs/api/app.md#importCertificate)
+- [win.hookWindowMessage(message, callback)](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#hookWindowMessage)
 - [request.write(chunk[, encoding][, callback])](https://github.com/electron/electron/blob/master/docs/api/client-request.md#write)
 - [request.end([chunk][, encoding][, callback])](https://github.com/electron/electron/blob/master/docs/api/client-request.md#end)
 - [contentTracing.getCategories(callback)](https://github.com/electron/electron/blob/master/docs/api/content-tracing.md#getCategories)
@@ -40,6 +40,9 @@ When a majority of affected functions are migrated, this flag will be enabled by
 - [ses.clearHostResolverCache([callback])](https://github.com/electron/electron/blob/master/docs/api/session.md#clearHostResolverCache)
 - [ses.getBlobData(identifier, callback)](https://github.com/electron/electron/blob/master/docs/api/session.md#getBlobData)
 - [ses.clearAuthCache(options[, callback])](https://github.com/electron/electron/blob/master/docs/api/session.md#clearAuthCache)
+- [systemPreferences.subscribeNotification(event, callback)](https://github.com/electron/electron/blob/master/docs/api/system-preferences.md#subscribeNotification)
+- [systemPreferences.subscribeLocalNotification(event, callback)](https://github.com/electron/electron/blob/master/docs/api/system-preferences.md#subscribeLocalNotification)
+- [systemPreferences.subscribeWorkspaceNotification(event, callback)](https://github.com/electron/electron/blob/master/docs/api/system-preferences.md#subscribeWorkspaceNotification)
 - [contents.executeJavaScript(code[, userGesture, callback])](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#executeJavaScript)
 - [contents.getZoomFactor(callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#getZoomFactor)
 - [contents.getZoomLevel(callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#getZoomLevel)
@@ -47,6 +50,7 @@ When a majority of affected functions are migrated, this flag will be enabled by
 - [contents.unregisterServiceWorker(callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#unregisterServiceWorker)
 - [contents.print([options], [callback])](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#print)
 - [contents.printToPDF(options, callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#printToPDF)
+- [contents.beginFrameSubscription([onlyDirty ,]callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#beginFrameSubscription)
 - [contents.savePage(fullPath, saveType, callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#savePage)
 - [webFrame.executeJavaScript(code[, userGesture, callback])](https://github.com/electron/electron/blob/master/docs/api/web-frame.md#executeJavaScript)
 - [webFrame.executeJavaScriptInIsolatedWorld(worldId, scripts[, userGesture, callback])](https://github.com/electron/electron/blob/master/docs/api/web-frame.md#executeJavaScriptInIsolatedWorld)
@@ -57,9 +61,10 @@ When a majority of affected functions are migrated, this flag will be enabled by
 
 ### Converted Functions
 
+- [app.getFileIcon(path[, options], callback)](https://github.com/electron/electron/blob/master/docs/api/app.md#getFileIcon)
+- [app.importCertificate(options, callback)](https://github.com/electron/electron/blob/master/docs/api/app.md#importCertificate)
 - [win.capturePage([rect, ]callback)](https://github.com/electron/electron/blob/master/docs/api/browser-window.md#capturePage)
 - [webviewTag.capturePage([rect, ]callback)](https://github.com/electron/electron/blob/master/docs/api/webview-tag.md#capturePage)
 - [contents.capturePage([rect, ]callback)](https://github.com/electron/electron/blob/master/docs/api/web-contents.md#capturePage)
-- [app.getFileIcon(path[, options], callback)](https://github.com/electron/electron/blob/master/docs/api/app.md#getFileIcon)
 - [shell.openExternal(url[, options, callback])](https://github.com/electron/electron/blob/master/docs/api/shell.md#openExternal)
 - [protocol.isProtocolHandled(scheme, callback)](https://github.com/electron/electron/blob/master/docs/api/protocol.md#isProtocolHandled)

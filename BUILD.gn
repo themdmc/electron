@@ -93,6 +93,9 @@ typescript_build("build_internal_typescript") {
 
 typescript_build("build_default_app_typescript") {
   sources = filenames.default_app_script_sources
+  deps = [
+    ":build-electron-definitions",
+  ]
 
   tsconfig = "default-app"
   electron_dir = "default_app"

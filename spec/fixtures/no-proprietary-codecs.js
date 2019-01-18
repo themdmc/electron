@@ -10,22 +10,22 @@ const path = require('path')
 const MEDIA_ERR_SRC_NOT_SUPPORTED = 4
 const FIVE_MINUTES = 5 * 60 * 1000
 
-let window
+let mainWindow
 
 app.once('ready', () => {
-  window = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
       nodeIntegration: true
     }
   })
 
-  window.webContents.on('crashed', (event, killed) => {
+  mainWindow.webContents.on('crashed', (event, killed) => {
     console.log(`WebContents crashed (killed=${killed})`)
     app.exit(1)
   })
 
-  window.loadFile(path.resolve(__dirname, 'asar', 'video.asar', 'index.html'))
+  mainWindow.loadFile(path.resolve(__dirname, 'asar', 'video.asar', 'index.html'))
 
   ipcMain.on('asar-video', (event, message, error) => {
     if (message === 'ended') {

@@ -1,10 +1,14 @@
 {
   "extends": "standard",
+  "parser": "typescript-eslint-parser",
+  "plugins": ["typescript"],
   "env": {
     "browser": true
   },
   "rules": {
     "no-var": "error",
+    "no-unused-vars": 0,
+    "typescript/no-unused-vars": "error",
     "prefer-const": ["error", {
       "destructuring": "all"
     }]

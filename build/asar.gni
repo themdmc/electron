@@ -43,6 +43,9 @@ template("asar") {
   chdir_action(target_name) {
     sources = invoker.sources
     outputs = invoker.outputs
+    if (defined(invoker.deps)) {
+      deps = invoker.deps
+    }
     script = "//electron/tools/js2asar.py"
     cwd = rebase_path(get_path_info(".", "abspath"))
     args = rebase_path(outputs, cwd) + [ asar_root ] + rebase_path(sources, ".")

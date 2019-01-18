@@ -15,7 +15,7 @@ const argv = require('yargs')
   .boolean('i').alias('i', 'invert')
   .argv
 
-let window = null
+let mainWindow = null
 
 // will be used by crash-reporter spec.
 process.port = 0
@@ -115,10 +115,10 @@ app.on('ready', function () {
 
   // Send auto updater errors to window to be verified in specs
   electron.autoUpdater.on('error', function (error) {
-    window.send('auto-updater-error', error.message)
+    mainWindow.send('auto-updater-error', error.message)
   })
 
-  window = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     title: 'Electron Tests',
     show: !global.isCi,
     width: 800,
@@ -129,22 +129,22 @@ app.on('ready', function () {
       webviewTag: true
     }
   })
-  window.loadFile('static/index.html', {
+  mainWindow.loadFile('static/index.html', {
     query: {
       grep: argv.grep,
       invert: argv.invert ? 'true' : ''
     }
   })
-  window.on('unresponsive', function () {
-    const chosen = dialog.showMessageBox(window, {
+  mainWindow.on('unresponsive', function () {
+    const chosen = dialog.showMessageBox(mainWindow, {
       type: 'warning',
       buttons: ['Close', 'Keep Waiting'],
       message: 'Window is not responsing',
       detail: 'The window is not responding. Would you like to force close it or just keep waiting?'
     })
-    if (chosen === 0) window.destroy()
+    if (chosen === 0) mainWindow.destroy()
   })
-  window.webContents.on('crashed', function () {
+  mainWindow.webContents.on('crashed', function () {
     console.error('Renderer process crashed')
     process.exit(1)
   })
@@ -153,8 +153,8 @@ app.on('ready', function () {
   // reply the result to renderer for verifying
   const downloadFilePath = path.join(__dirname, '..', 'fixtures', 'mock.pdf')
   ipcMain.on('set-download-option', function (event, needCancel, preventDefault, filePath = downloadFilePath, dialogOptions = {}) {
-    window.webContents.session.once('will-download', function (e, item) {
-      window.webContents.send('download-created',
+    mainWindow.webContents.session.once('will-download', function (e, item) {
+      mainWindow.webContents.send('download-created',
         item.getState(),
         item.getURLChain(),
         item.getMimeType(),
@@ -170,7 +170,7 @@ app.on('ready', function () {
           try {
             item.getURL()
           } catch (err) {
-            window.webContents.send('download-error', url, filename, err.message)
+            mainWindow.webContents.send('download-error', url, filename, err.message)
           }
         })
       } else {
@@ -181,7 +181,7 @@ app.on('ready', function () {
           item.setSaveDialogOptions(dialogOptions)
         }
         item.on('done', function (e, state) {
-          window.webContents.send('download-done',
+          mainWindow.webContents.send('download-done',
             state,
             item.getURL(),
             item.getMimeType(),
@@ -212,20 +212,20 @@ app.on('ready', function () {
     let promise
 
     if (hasCallback) {
-      promise = window.webContents.executeJavaScript(code, (result) => {
-        window.webContents.send('executeJavaScript-response', result)
+      promise = mainWindow.webContents.executeJavaScript(code, (result) => {
+        mainWindow.webContents.send('executeJavaScript-response', result)
       })
     } else {
-      promise = window.webContents.executeJavaScript(code)
+      promise = mainWindow.webContents.executeJavaScript(code)
     }
 
     promise.then((result) => {
-      window.webContents.send('executeJavaScript-promise-response', result)
+      mainWindow.webContents.send('executeJavaScript-promise-response', result)
     }).catch((error) => {
-      window.webContents.send('executeJavaScript-promise-error', error)
+      mainWindow.webContents.send('executeJavaScript-promise-error', error)
 
       if (error && error.name) {
-        window.webContents.send('executeJavaScript-promise-error-name', error.name)
+        mainWindow.webContents.send('executeJavaScript-promise-error-name', error.name)
       }
     })
 
@@ -277,7 +277,7 @@ ipcMain.on('set-client-certificate-option', function (event, skip) {
       ipcMain.on('client-certificate-response', function (event, certificate) {
         callback(certificate)
       })
-      window.webContents.send('select-client-certificate', webContents.id, list)
+      mainWindow.webContents.send('select-client-certificate', webContents.id, list)
     }
   })
   event.returnValue = 'done'

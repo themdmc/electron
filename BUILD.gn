@@ -1,5 +1,6 @@
 import("build/asar.gni")
 import("build/npm.gni")
+import("build/tsc.gni")
 import("buildflags/buildflags.gni")
 import("electron_paks.gni")
 import("filenames.gni")
@@ -51,6 +52,50 @@ config("branding") {
     "ATOM_PRODUCT_NAME=\"$electron_product_name\"",
     "ATOM_PROJECT_NAME=\"$electron_project_name\"",
   ]
+}
+
+npm_action("build-electron-definitions") {
+  script = "gn-typescript-definitions"
+  args = [ rebase_path("$target_gen_dir/tsc/typings/electron.d.ts") ]
+
+  outputs = [
+    "$target_gen_dir/tsc/typings/electron.d.ts",
+  ]
+}
+
+typescript_build("build_internal_typescript") {
+  sources = filenames.js_sources
+  deps = [
+    ":build-electron-definitions",
+  ]
+
+  if (enable_desktop_capturer) {
+    sources += [
+      "lib/browser/desktop-capturer.js",
+      "lib/renderer/api/desktop-capturer.js",
+    ]
+  }
+  if (enable_view_api) {
+    sources += [
+      "lib/browser/api/views/box-layout.js",
+      "lib/browser/api/views/button.js",
+      "lib/browser/api/views/label-button.js",
+      "lib/browser/api/views/layout-manager.js",
+      "lib/browser/api/views/md-text-button.js",
+      "lib/browser/api/views/resize-area.js",
+      "lib/browser/api/views/text-field.js",
+    ]
+  }
+
+  tsconfig = "electron"
+  electron_dir = "lib"
+}
+
+typescript_build("build_default_app_typescript") {
+  sources = filenames.default_app_script_sources
+
+  tsconfig = "default-app"
+  electron_dir = "default_app"
 }
 
 npm_action("atom_browserify_sandbox") {
@@ -138,24 +183,12 @@ action("atom_js2c") {
 }
 
 asar("js2asar") {
-  sources = filenames.js_sources
-  if (enable_desktop_capturer) {
-    sources += [
-      "lib/browser/desktop-capturer.js",
-      "lib/renderer/api/desktop-capturer.js",
-    ]
-  }
-  if (enable_view_api) {
-    sources += [
-      "lib/browser/api/views/box-layout.js",
-      "lib/browser/api/views/button.js",
-      "lib/browser/api/views/label-button.js",
-      "lib/browser/api/views/layout-manager.js",
-      "lib/browser/api/views/md-text-button.js",
-      "lib/browser/api/views/resize-area.js",
-      "lib/browser/api/views/text-field.js",
-    ]
-  }
+  deps = [
+    ":build_internal_typescript",
+  ]
+
+  sources = get_target_outputs(":build_internal_typescript")
+
   outputs = [
     "$root_out_dir/resources/electron.asar",
   ]
@@ -163,7 +196,12 @@ asar("js2asar") {
 }
 
 asar("app2asar") {
-  sources = filenames.default_app_sources
+  deps = [
+    ":build_default_app_typescript",
+  ]
+  sources =
+      get_target_outputs(":build_default_app_typescript") +
+      filenames.default_app_static_sources + filenames.default_app_extra_sources
   outputs = [
     "$root_out_dir/resources/default_app.asar",
   ]

@@ -25,6 +25,9 @@ namespace net {
 class SSLCertRequestInfo;
 }
 
+// Returns the user agent of Electron.
+std::string GetUserAgent();
+
 namespace atom {
 
 class AtomResourceDispatcherHostDelegate;
@@ -154,6 +157,8 @@ class AtomBrowserClient : public content::ContentBrowserClient,
   void OnNetworkServiceCreated(
       network::mojom::NetworkService* network_service) override;
   bool ShouldBypassCORB(int render_process_id) const override;
+  std::string GetProduct() const override;
+  std::string GetUserAgent() const override;
 
   // content::RenderProcessHostObserver:
   void RenderProcessHostDestroyed(content::RenderProcessHost* host) override;

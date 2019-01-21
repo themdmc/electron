@@ -482,7 +482,7 @@ void AtomBrowserClient::AppendExtraCommandLineSwitches(
                                                    switches::kSecureSchemes};
   command_line->CopySwitchesFrom(*base::CommandLine::ForCurrentProcess(),
                                  kCommonSwitchNames,
-                                 arraysize(kCommonSwitchNames));
+                                 base::size(kCommonSwitchNames));
 
   // The registered service worker schemes.
   if (!g_custom_service_worker_schemes->empty())

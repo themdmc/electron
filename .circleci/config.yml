@@ -623,6 +623,7 @@ steps-ffmpeg-build: &steps-ffmpeg-build
         root: .
         paths:
           - src/out/ffmpeg/libffmpeg.so
+          - src/out/ffmpeg/libffmpeg.dylib
           - src/out/ffmpeg/ffmpeg.zip
 
     - *step-show-sccache-stats
@@ -970,6 +971,14 @@ jobs:
       <<: *env-enable-sccache
     <<: *steps-electron-build-for-tests
 
+  osx-chromedriver:
+    <<: *machine-mac
+    environment:
+      <<: *env-release-build
+      <<: *env-enable-sccache
+      <<: *env-send-slack-notifications
+    <<: *steps-chromedriver-build
+
   osx-release:
     <<: *machine-mac-large
     environment:
@@ -990,6 +999,14 @@ jobs:
       <<: *env-testing-build
       <<: *env-enable-sccache
     <<: *steps-electron-build-for-tests
+
+  mas-chromedriver:
+    <<: *machine-mac
+    environment:
+      <<: *env-release-build
+      <<: *env-enable-sccache
+      <<: *env-send-slack-notifications
+    <<: *steps-chromedriver-build
 
   mas-release:
     <<: *machine-mac-large

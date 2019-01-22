@@ -253,12 +253,9 @@ step-persist-data-for-tests: &step-persist-data-for-tests
   persist_to_workspace:
     root: .
     paths:
-      # To run `gn args` for that dir from the "verify-ffmpeg" script.
-      - src/out/Default/args.gn
-      - src/out/Default/build.ninja
-
       # Build artifacts
       - src/out/Default/dist.zip
+      - src/out/Default/ffmpeg.zip
       - src/out/Default/mksnapshot.zip
       - src/out/Default/gen/node_headers
 
@@ -270,6 +267,13 @@ step-electron-dist-unzip: &step-electron-dist-unzip
       # -o  overwrite files WITHOUT prompting
       # TODO(alexeykuzmin): Remove '-o' when it's no longer needed.
       unzip -o dist.zip
+
+step-ffmpeg-unzip: &step-ffmpeg-unzip
+  run:
+    name: Unzip ffmpeg.zip
+    command: |
+      cd src/out/ffmpeg
+      unzip -o ffmpeg.zip
 
 step-mksnapshot-unzip: &step-mksnapshot-unzip
   run:
@@ -623,7 +627,6 @@ steps-ffmpeg-build: &steps-ffmpeg-build
         root: .
         paths:
           - src/out/ffmpeg/libffmpeg.so
-          - src/out/ffmpeg/libffmpeg.dylib
           - src/out/ffmpeg/ffmpeg.zip
 
     - *step-show-sccache-stats
@@ -667,6 +670,7 @@ steps-verify-ffmpeg: &steps-verify-ffmpeg
         at: .
     - *step-depot-tools-add-to-path
     - *step-electron-dist-unzip
+    - *step-ffmpeg-unzip
     - *step-setup-linux-for-headless-testing
 
     - *step-verify-ffmpeg

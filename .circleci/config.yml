@@ -496,6 +496,7 @@ steps-electron-build-for-tests: &steps-electron-build-for-tests
         at: .
     - *step-depot-tools-add-to-path
     - *step-setup-env-for-build
+    - *step-install-nodejs-on-mac
     - *step-gn-gen-default
 
     # Electron app
